@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+
+<div class="container" style="max-width: auto; max-height: auto;">
+  <div class="card border-info mt-3" style="max-width: auto; max-height: auto;">
+    <img id="profile-pic"class="card-img rounded-circle img-fluid mx-auto mt-2" style="max-height: 200px; max-width: 200px;" src="{{ user.profile.image.url }}">
+    <div id="profile-text"class="card-body">
+      <h1>Username:</h1>
+      <h5 class="card-title">{{ user.username }}</h5>
+      <h1>E-mail:</h1>
+      <p class="card-text mb-2">{{ user.email }}</p>
+      <h1>Bio:</h1>
+      <p class="card-text">{{ user.profile.bio }}</p>
+    </div>
+
+    {% if user not in current_user.friends.all and user != current_user %}
+    <div>
+      <a href="{% url 'friend:send-friend-request' user.pk %}">
+        <button type="button" class="btn btn-success btn-lg btn-block mb-2">
+        Send Friend Request
+        </button>
+      </a>
+    </div>
+    {% endif %}
+
+    {% if sent_friend_request %}
+    <div>
+      <a href="{% url 'friend:cancel-friend-request' user.pk %}">
+        <button type="button" class="btn btn-danger btn-lg btn-block mb-2">
+        Cancel Friend Request
+        </button>
+      </a>
+    </div>
+    {% endif %}
+
+    {% if user in current_user.friends.all and user != current_user %}
+    <div>
+      <a href="{% url 'messaging:direct-chat' user.pk %}">
+        <button type="button" class="btn btn-info btn-lg btn-block mb-2">
+        Message other user!
+        </button>
+      </a>
+    </div>
+
+    <div>
+    {% comment %} <a id="videochat" href="{% url 'videochat:private-video-chat' user.pk %}">
+      <button type="button" class="btn btn-success btn-lg btn-block mb-2">
+      VideoChat other user!
+      </button>
+    </a> {% endcomment %}
+    </div>
+    {% endif %}
+
+
+  </div>
+  </div>
+
+{{ user.pk|json_script:"videochat.pk" }}
+
+<script type="text/javascript">
+
+  let videochat_pk = JSON.parse(document.getElementById('videochat.pk').textContent);
+
+  let handleSubmit = async (e) => {
+      e.preventDefault()
+      let room = videochat_pk
+
+      let response = await fetch(`/get_token/?channel=${room}`)
+      let data = await response.json()
+      
+      let UID = data.uid
+      let token = data.token
+
+      sessionStorage.setItem('UID', UID)
+      sessionStorage.setItem('token', token)
+      sessionStorage.setItem('room', room)
+
+      window.open('/privatevideochat/'+videochat_pk+'/', '_self')
+  }
+
+  document.getElementById("videochat").addEventListener('click', handleSubmit)
+</script>
+
+
+{% endblock content %}

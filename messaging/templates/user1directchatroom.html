@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<head>
+    <style>
+        #chatLog {
+            height: 300px;
+            background-color: #FFFFFF;
+            resize: none;
+        }
+
+        #onlineUsersSelector {
+            height: 300px;
+        }
+    </style>
+</head>
+
+<main>
+    
+    <div class="container mt-3 p-5">
+        <h2>Direct chat between {{ user1chat.user1.username }} and {{ user1chat.user2.username }}</h2>
+        <div class="row">
+            <div class="col-12 col-md-8">
+                <div class="mb-2">
+                    <label for="chatLog">Direct Chat Room object ID: #{{ user1chat.id }}</label>
+                    <textarea class="form-control" id="chatLog" readonly>
+                    {% for message in chat_messages %}
+                        {{ message.timestamp }}
+                        {{ message.private_sender.username }}: {{ message.content }}
+                    {% endfor %}
+                    </textarea>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="chatMessageInput" placeholder="Enter your chat message">
+                    <div class="input-group-append">
+                        <button class="btn btn-success" id="chatMessageSend" type="button">Send</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <label for="onlineUsers">Online users</label>
+                <select multiple class="form-control" id="onlineUsersSelector">
+                </select>
+            </div>
+        </div>
+        {{ user1chat.id|json_script:"private_room_id" }}
+    </div>
+
+</main>
+
+<script src="{% static 'js/directchat.js' %}"></script>
+
+{% endblock content %}

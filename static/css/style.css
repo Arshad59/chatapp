@@ -1,0 +1,231 @@
+/* 
+html5doctor.com Reset Stylesheet
+v1.6.1
+Last Updated: 2010-09-17
+Author: Richard Clark - http://richclarkdesign.com 
+Twitter: @rich_clark
+*/
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+
+body {
+    line-height:1;
+}
+
+article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section { 
+    display:block;
+}
+
+nav ul {
+    list-style:none;
+}
+
+blockquote, q {
+    quotes:none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content:'';
+    content:none;
+}
+
+a {
+    margin:0;
+    padding:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+
+/* change colours to suit your needs */
+ins {
+    background-color:#ff9;
+    color:#000;
+    text-decoration:none;
+}
+
+/* change colours to suit your needs */
+mark {
+    background-color:#ff9;
+    color:#000; 
+    font-style:italic;
+    font-weight:bold;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+abbr[title], dfn[title] {
+    border-bottom:1px dotted;
+    cursor:help;
+}
+
+table {
+    border-collapse:collapse;
+    border-spacing:0;
+}
+
+/* change border colour to suit your needs */
+hr {
+    display:block;
+    height:1px;
+    border:0;   
+    border-top:1px solid #cccccc;
+    margin:1em 0;
+    padding:0;
+}
+
+input, select {
+    vertical-align:middle;
+}
+
+/* End of stylesheet reset. */
+.navbar-brand h1{
+    font-family: great-vibes, cursive;
+    font-size: 35px;
+}
+
+/* Start of my code. */
+#nav{
+    background-color: #B048FF !important;
+}
+/* Profile Form */
+#profile-form{
+    transform: translateX();
+    margin-left: 25px;
+}
+/* Profile CSS */
+
+
+
+
+.container .card-title{
+    border: 2px solid #33b5e5;
+    padding-left: 10px;
+    line-height: 50px;
+    font-size: 24px;
+}
+
+.container .card-text{
+    border: 2px solid #33b5e5;
+    padding-left: 10px;
+    line-height: 50px;
+    font-size: 24px;
+}
+
+/* ------ room styling ------ */
+
+:root{
+    --shadow:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06):
+}
+
+#room-name-wrapper{
+    text-align: center;
+    font-size: 18px;
+}
+
+#video-streams{
+    display: flex;
+    flex-wrap: wrap;
+    height: 85vh;
+    width: 95%;
+    margin: 0 auto;
+}
+
+.video-container{
+    flex-basis: 500px;
+    flex-grow: 1;
+    max-height: 100%;
+    min-height: 350px;
+    border: 1px solid rgb(75, 95, 172, 1);
+    border-radius: 5px;
+    margin: 2px;
+    background-color: rgba(194, 202, 219, 1);
+    position: relative;
+}
+
+.video-player{
+    height: 100%;
+    width: 100%;
+}
+
+.video-player > *{
+    border-radius: 5px;
+}
+
+.username-wrapper{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 9999;
+    background-color: rgba(0,0,0,0.3 );
+    width: fit-content;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #fff;
+}
+
+@media screen and (max-width:1650px){
+    .video-container{
+        flex-basis: 300px;
+        min-height: 200px;
+    }
+}
+
+/* ----- rooom styling controls ------ */
+
+
+
+#controls-wrapper{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    column-gap: 1em;
+    position: fixed;
+    bottom: 20px;
+}
+
+.control-icon{
+    height: 50px;
+    width: 50px;
+    box-shadow: var(--shadow);
+    background-color: #fff;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#leave-btn{
+    background-color: rgb(255, 80, 80, 1);
+}
+
+#mic-btn{
+    background-color: silver;
+}
+
+#camera-btn {
+    background-color: #B048FF;
+}

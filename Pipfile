@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+django-notifications-hq = "*"
+python-decouple = "*"
+channels-redis = "*"
+agora-token-builder = "*"
+channels = "*"
+django-autoslug = "*"
+pillow = "*"
+django-bootstrap4 = "*"
+django-crispy-forms = "*"
+daphne = "*"
+django-redis = "*"
+gunicorn = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
