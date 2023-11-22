@@ -15,6 +15,9 @@ class FriendRequest(models.Model):
 
     # As soon as a friend request is issued a timestamp is created.
     timestamp = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = "FriendRequest"
 
     def __str__(self):
         return "From {}, to {}".format(self.sender.username, self.receiver.username)

@@ -11,6 +11,9 @@ class ChatRoom(models.Model):
 
     name = models.CharField(max_length=128)
     online = models.ManyToManyField(to=CustomUser, blank=True)
+    
+    class Meta:
+        db_table = "ChatRoom"
 
     def get_online_count(self):
         return self.online.count()
@@ -38,6 +41,9 @@ class PrivateChatRoom(models.Model):
 
     # Universally Unique Identifier for each Private Chat Room instance involving the fields above.
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    
+    class Meta:
+        db_table="PrivateChatRoom"
 
     def get_online_count(self):
         return self.online.count()
@@ -58,8 +64,11 @@ class Message(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     room = models.ForeignKey(to=ChatRoom, on_delete=models.CASCADE)
     content = models.CharField(max_length=512)
+    is_media = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        db_table = "Message"
     def __str__(self):
         return f'Public Messages: {self.user.username}: {self.content} [{self.timestamp}]'
 
@@ -70,6 +79,11 @@ class PrivateMessage(models.Model):
     privateroom = models.ForeignKey(to=PrivateChatRoom, on_delete=models.CASCADE)
     content = models.CharField(max_length=512)
     timestamp = models.DateTimeField(auto_now_add=True)
-
+    is_media = models.BooleanField(default=False)
+     
+     
+    class Meta:
+        db_table = "PrivateMessage"
+        
     def __str__(self):
         return f'Private Message From: {self.private_sender.username}: {self.content} [{self.timestamp}] to {self.private_receiver.username} | Post ID: {self.id}'

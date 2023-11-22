@@ -8,17 +8,24 @@ from django.dispatch import receiver
 from PIL import Image
 from autoslug import AutoSlugField
 
+
 # User model inheriting from Django's AbstractUser.
 class CustomUser(AbstractUser):
     age = models.PositiveIntegerField(null=True, blank=True)
     friends = models.ManyToManyField("CustomUser", blank=True)
 
+    class Meta:
+        db_table = "User"
+
+
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
-    slug = AutoSlugField(populate_from='user', null=True)
-    bio = models.TextField(max_length=250, default='Bio')
-    
+    image = models.ImageField(default="default.jpg", upload_to="profile_pics")
+    username = AutoSlugField(populate_from="user", null=True)
+    bio = models.TextField(max_length=250, default="Bio")
+
+    class Meta:
+        db_table = "Profile"
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
@@ -36,11 +43,13 @@ class Profile(models.Model):
             img.thumbnail(output_size)
             img.save(self.image.path)
 
+
 # User profile is created upon user signup.
 @receiver(post_save, sender=CustomUser)
 def create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+
 
 # User profile is saved upon user signup.
 @receiver(post_save, sender=CustomUser)
