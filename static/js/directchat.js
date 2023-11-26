@@ -42,7 +42,7 @@ chatMessageInput.onkeyup = function(e) {
         chatMessageSend.click();
     }
 };
-console.log("Evet listener attached to chatMessageSend")
+console.log("Event listener attached to chatMessageSend")
 // Clears the input and forwards the message.
 chatMessageSend.onclick = function () {
     if (chatMessageInput.value.length === 0 && !fileInput.files.length) {

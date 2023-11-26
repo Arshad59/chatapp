@@ -80,8 +80,9 @@ class Message(models.Model):
 
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     room = models.ForeignKey(to=ChatRoom, on_delete=models.CASCADE)
-    content = models.CharField(max_length=512)
+    content = models.CharField(max_length=512,null=True,blank=True)
     is_media = models.BooleanField(default=False)
+    image = models.ImageField(upload_to="chat_images/", null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:

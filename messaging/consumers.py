@@ -93,43 +93,66 @@ class ChatConsumer(WebsocketConsumer):
     # Message is forwarded using group send to chat message.
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json.get("message")
 
         if not self.user.is_authenticated:
             return
+        if "file" in text_data_json["message"]:
+            # Save the file to the server
+            file_data = text_data_json["message"]["file"]
+            self.save_file(file_data)
 
-        if message.startswith("/pm"):
-            split = message.split(" ", 2)
-            target = split[1]
-            target_msg = split[2]
-
-            # Sends private message to target inbox.
+        else:
+            message = text_data_json["message"]
+            # Handle regular text messages
+            self.save_message(message, 0)
             async_to_sync(self.channel_layer.group_send)(
-                f"inbox_{target}",
+                self.room_group_name,
                 {
-                    "type": "private_message",
                     "user": self.user.username,
-                    "message": target_msg,
+                    "type": "chat_message",
+                    "message": message,
                 },
             )
-            # sends 'private message delivered' to the user.
-            self.send(
-                json.dumps(
-                    {
-                        "type": "private_message_delivered",
-                        "target": target,
-                        "message": target_msg,
-                    }
-                )
-            )
-            return
 
-        # Sends the chat message Event to the room.
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {"user": self.user.username, "type": "chat_message", "message": message},
+    def save_file(self, file_content):
+        saved_message = self.save_message(None, 1)
+        content = file_content["content"].split(",")
+
+        try:
+            image_content = base64.b64decode(content[1])
+        except binascii.Error as e:
+            # Handle the error, log it, and potentially return an error response
+            print(f"Error decoding base64: {e}")
+            return
+        file_name = f"{saved_message.id}.{file_content['type'].split('/')[-1]}"
+        saved_message.image.save(file_name, ContentFile(image_content), save=False)
+        saved_message.save()
+
+        # Broadcast file details to the chat room
+        self.send(
+            json.dumps(
+                {
+                    "type": "file",
+                    "file": {
+                        "id": saved_message.id,
+                        "filename": file_name,
+                        "uploader": self.user.username,
+                        "timestamp": str(saved_message.timestamp),
+                    },
+                }
+            )
         )
-        Message.objects.create(user=self.user, room=self.room, content=message)
+
+    def save_message(self, message, is_media):
+        saved_message = Message.objects.create(
+            user=self.user, 
+            room=self.room, 
+            content=message,
+            is_media=is_media
+        )
+
+        saved_message.save()
+        return saved_message
 
     # Methods for message types for the channel layer.
 
@@ -261,7 +284,7 @@ class DirectChatConsumer(WebsocketConsumer):
     def save_file(self, file_content):
         saved_message = self.save_message(None, 1)
         content = file_content["content"].split(",")
-       
+
         try:
             image_content = base64.b64decode(content[1])
         except binascii.Error as e:

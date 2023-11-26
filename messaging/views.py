@@ -27,11 +27,12 @@ def messaging_page(request):
 # View for the private chat room.
 def chat_room(request, room_name):
     room, created = ChatRoom.objects.get_or_create(name=room_name)
-
+    messages = Message.objects.filter(room = room)
     return render(
         request,
         "chatroom.html",
         {
+            "messages":messages,
             "room": room,
         },
     )
