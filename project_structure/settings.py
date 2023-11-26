@@ -168,8 +168,7 @@ LOGIN_URL = "../users/templates/registration/login.html"
 # Added to tell Django to use new custom user model insted of built-in User model.
 AUTH_USER_MODEL = "users.CustomUser"
 
-# Added config for using bootstrap4 template pack with crispy forms.
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+
 
 # SMTP Configuration
 

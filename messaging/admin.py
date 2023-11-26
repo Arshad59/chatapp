@@ -1,5 +1,5 @@
 from django.contrib import admin
-from messaging.models import ChatRoom, Message, PrivateChatRoom, PrivateMessage
+from messaging.models import *
 
 # Register your models here.
 

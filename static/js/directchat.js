@@ -8,7 +8,7 @@ let chatLog = document.querySelector("#chatLog");
 let chatMessageInput = document.querySelector("#chatMessageInput");
 let chatMessageSend = document.querySelector("#chatMessageSend");
 let onlineUsersSelector = document.querySelector("#onlineUsersSelector");
-
+let fileInput = document.getElementById('fileInput');
 // Adds option to 'onlineUsersSelector.'
 function onlineUsersSelectorAdd(value) {
     if (document.querySelector("option[value='" + value + "']")) return;
@@ -35,20 +35,52 @@ onlineUsersSelector.onchange = function() {
 // Focus 'ChatMessageInput' when user opens the page.
 chatMessageInput.focus();
 
+
 // Submit info if enter key is pressed.
 chatMessageInput.onkeyup = function(e) {
     if (e.keyCode === 13) {
         chatMessageSend.click();
     }
 };
-
+console.log("Evet listener attached to chatMessageSend")
 // Clears the input and forwards the message.
-chatMessageSend.onclick = function() {
-    if (chatMessageInput.value.length === 0) return;
-    chatSocket.send(JSON.stringify({
-        "message": chatMessageInput.value,
-    }));
+chatMessageSend.onclick = function () {
+    if (chatMessageInput.value.length === 0 && !fileInput.files.length) {
+        console.log("No file or message to send");
+        return;
+    }
+
+    if (fileInput.files.length) {
+        const file = fileInput.files[0];
+
+        const reader = new FileReader();
+reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const fileContent = event.target.result;
+
+            // Send a message with the file content and type to the server
+            chatSocket.send(JSON.stringify({
+                'message': {
+                    'file': {
+                        'content': fileContent,
+                        'type': file.type,
+                    },
+                },
+            }));
+            console.log("File sent successfully");
+        };
+
+        
+    } else {
+        // Handle sending text messages
+        chatSocket.send(JSON.stringify({
+            "message": chatMessageInput.value,
+        }));
+    }
+
+    // Clear input fields
     chatMessageInput.value = "";
+    fileInput.value = "";
 };
 
 // WebSockets.
@@ -56,6 +88,32 @@ chatMessageSend.onclick = function() {
 ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 
 let chatSocket = null;
+function appendFile(uploader, file) {
+    const fileMessage = document.createElement('div');
+    fileMessage.className = 'file-message';
+
+    const uploaderElement = document.createElement('span');
+    uploaderElement.className = 'file-uploader';
+    uploaderElement.textContent = `${uploader}: `;
+
+    const linkElement = document.createElement('a');
+    linkElement.href = `/media/private_chat_images/${file.filename}`;  // Update the path based on your media settings
+    linkElement.textContent = `File: ${file.filename}`;
+    linkElement.target = '_blank';
+
+    const timestampElement = document.createElement('span');
+    timestampElement.className = 'file-timestamp';
+    timestampElement.textContent = ` [${file.timestamp}]`;
+
+    fileMessage.appendChild(uploaderElement);
+    fileMessage.appendChild(linkElement);
+    fileMessage.appendChild(timestampElement);
+
+    chatLog.appendChild(fileMessage);
+}
+
+// Modify the switch case for 'file' type in chatSocket.onmessage
+
 
 function connect() {
     chatSocket = new WebSocket(ws_scheme + "://" + window.location.host + "/ws/messenger/direct_chat/" + private_room_id + "/");
@@ -99,6 +157,14 @@ function connect() {
             case "private_message_delivered":
                 chatLog.value += "PM to " + data.target + ": " + data.message + "\n";
                 break;
+            case 'file':
+                const file = data.file;
+                const uploader = data.user;
+                // Append the file information to the chat log
+                appendFile(uploader, file);
+                break;
+
+            break;
             default:
                 console.error("Unknown message type!");
                 break;
