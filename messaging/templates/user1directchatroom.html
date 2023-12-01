@@ -1,78 +1,63 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+{% extends "base.html" %}
+{% load static %}
 
-<head>
-  <style>
-    #chatLog {
-      height: 500px;
-   border-color:white;
-    }
+{% block content %}
 
-    #onlineUsersSelector {
-      height: 300px;
-    }
-     img{
-            width:50px;
-            height:50px;
-        }
-  </style>
-</head>
-
-<main>
-  <div class="container mt-3 p-5">
-    <h2>{{ user1chat.user2.username }}</h2>
-    <div class="row">
-      <div class="col-12 col-md-8">
-        <div class="mb-2" style="overflow-y: scroll;background-color: #ffffff;">
-          <div class="form-control" id="chatLog">
-            {% for message in chat_messages %} 
-            {%if message.private_sender.username == request.user.username%}
-            <div style="margin-top: 5px; margin-left:400px">
+<main class="mt-3 p-5">
+  <div class="container">
+    <h2 class="text-2xl font-bold">{{ user1chat.user2.username }}</h2>
+    <div class="flex flex-wrap">
+      <div class="w-full md:w-8/12">
+        <div class="mb-2 overflow-y-scroll bg-white p-3" style="height: 500px; border-color: white;">
+          <div id="chatLog" class="form-control">
+            {% for message in chat_messages %}
+              {% if message.private_sender.username == request.user.username %}
+                <div class="ml-[600px] mb-3 user md:ml-[400px] md:text-sm sm:ml-[100px] sm:text-xsm" >
                   {% if message.is_media %}
-                    <div style="margin-top: 5px">
-                        {{ message.timestamp }}<br />
-                          <a href="{{message.image.url}}" target = "_blank">
-                          <img src="{{ message.image.url }}" alt="Uploaded Image">
-                        </a>
-                    </div>
-                        {% else %}
+                    <div class="mb-3">
                       {{ message.timestamp }}<br />
-              <strong>{{ message.content }}</strong><br/>
-              {%endif%}
-            </div>
-            {%else%}
-{% if message.is_media %}
-            <div style="margin-top: 5px">
-                {{ message.timestamp }}<br />
-                <a href="{{message.image.url}}" target = "_blank">
-                          <img src="{{ message.image.url }}" alt="Uploaded Image">
-                        </a>
-            </div>
-        {% else %}
-            <div style="margin-top: 5px ">
-              {{ message.timestamp }}<br />
-              <strong>{{ message.content }}</strong><br />
-            </div>
-            {%endif%}
-            {%endif%} 
+                      <a href="{{message.image.url}}" target="_blank">
+                        <img src="{{ message.image.url }}" alt="Uploaded Image" class="w-20 h-20">
+                      </a>
+                    </div>
+                  {% else %}
+                    {{ message.timestamp }}<br />
+                    <strong>{{ message.content }}</strong><br />
+                  {% endif %}
+                </div>
+              {% else %}
+                <div class="mr-auto mb-3">
+                  {% if message.is_media %}
+                    <div class="mb-3">
+                      {{ message.timestamp }}<br />
+                      <a href="{{message.image.url}}" target="_blank">
+                        <img src="{{ message.image.url }}" alt="Uploaded Image" class="w-20 h-20">
+                      </a>
+                    </div>
+                  {% else %}
+                    {{ message.timestamp }}<br />
+                    <strong>{{ message.content }}</strong><br />
+                  {% endif %}
+                </div>
+              {% endif %}
             {% endfor %}
           </div>
         </div>
-        <div class="input-group">
-          <input
-            type="text"
-            class="form-control"
-            id="chatMessageInput"
-            placeholder="Enter your chat message"
-          />
-          <input type="file" id="fileInput" accept = ".pdf,.png,.jpg,.jpeg"/>
+        <div class="flex items-center mt-2">
+                    <input type="text" class="flex-grow border border-gray-300 p-2" id="chatMessageInput" placeholder="Enter your chat message">
+                    <input type="file" id="fileInput" accept=".pdf, .png, .jpg, .jpeg" class="hidden">
+                    <label for="fileInput">
+                    <img src="{%static 'images/send_file.png'%}" alt="upload icon" width="60" height="60" />
+                    <input type="file" id="fileInput" accept = ".pdf,.png,.jpg,.jpeg" name="doc" hidden/>
+                    </label>
                     <div class="input-group-append">
-                        <button class="btn btn-success" id="chatMessageSend" type="button">Send</button>
+                         <button type="button" id="chatMessageSend" class="bg-green-500 text-white py-2 px-4 rounded">Send</button>
                     </div>
         </div>
       </div>
-      <div class="col-12 col-md-4">
-        <label for="onlineUsers">Online users</label>
-        <select multiple class="form-control" id="onlineUsersSelector"></select>
+      <div class="w-full md:w-4/12 mt-4 md:mt-0">
+        <label for="onlineUsers" class="block mb-2">Online users</label>
+        <select multiple class="border border-gray-300 p-2 w-full" id="onlineUsersSelector"></select>
       </div>
     </div>
     {{ user1chat.id|json_script:"private_room_id" }}
@@ -80,5 +65,10 @@
 </main>
 
 <script src="{% static 'js/directchat.js' %}"></script>
-
+<script>
+  user = document.getElementByClassName("user")
+  if(window.innerWidth<768){
+    user.style.margin-left="50px";
+  }
+</script>
 {% endblock content %}

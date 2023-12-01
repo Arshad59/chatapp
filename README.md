@@ -1,1 +1,1 @@
-ChatApp built using django-channels, bootstrap
+ChatApp built using django-channels, websocket.

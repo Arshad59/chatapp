@@ -14,18 +14,18 @@ from django.contrib.auth.models import User
 
 # Create your views here.
 
-class SignUpView(CreateView):
-    # Logic for the signup form.
-    # CustomUserCreation form will tell django to use this form and redirect to login page once signed up.
-    def register(request):
-        if request.method == "POST":
-            form = CustomUserCreationForm(request.POST)
-            if form.is_valid():
-                username = form.cleaned_data.get('username')
-                email = form.cleaned_data.get('email')
-    form_class = CustomUserCreationForm
-    success_url = reverse_lazy('users:login')
-    template_name = 'signup.html'
+def signup(request):
+    if request.method=="POST":
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+        
+    form = CustomUserCreationForm()
+    return render(request,"signup.html",{
+        "form":form,
+    })
+
 
 class CustomPasswordChangeView(PasswordChangeView):
     success_url = reverse_lazy('pages:home')

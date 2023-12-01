@@ -1,165 +1,81 @@
 {% load static %}
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
-{% load crispy_forms_tags %}
+{% load static tailwind_tags %}
 
 <!DOCTYPE html>
 <html>
 <head>
-
+    {% tailwind_css %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet"  type="text/css" href="{% static 'css/style.css' %}">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
     {% block title %}
-
-    <title>ChatApp</title>
-
+        <title>ChatApp</title>
     {% endblock title %}
 
-
 </head>
-<body>
+<body class="bg-slate-100">
 
-
-    <header>
-
-        <nav id="nav" class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="{% url 'pages:home' %}">
-              <h1 class="great-vibes">
-                 ChatApp
-                <i class="fa-solid fa-feather-pointed">
-  
-              </i>
-            </h1> 
-          </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-        
+<header class="bg-white shadow text-xl">
+    <nav id="nav" class="bg-violet-300 my-auto mx-auto px-4 py-2 flex items-center justify-between">
+        <a class="text-5xl font-great-vibes text-black" href="{% url 'pages:home' %}">
+            ChatApp
+            <i class="fas fa-feather-pointed"></i>
+        </a>
+        <div class="flex items-center space-x-4">
             {% if user.is_authenticated %}
-          
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'pages:home' %}">Home/Dashboard <i class="fa-solid fa-house-user"></i></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'friend:friends' %}">Friends <i class="fa-solid fa-user-group"></i></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'messaging:messenger' %}">Chat Rooms <i class="fa-solid fa-message"></i></a>
-                </li>
-                {% comment %} <li class="nav-item">
-                    <a class="nav-link" href="{% url 'videochat:lobby' %}">Group Video Chat <i class="fa-solid fa-video"></i></a>
-                  </li> {% endcomment %}
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu</a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{% url 'pages:my_profile' user.pk %}">Profile</a>
-                    <a class="dropdown-item" href="{% url 'users:change_password' %}">Change Password</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'users:logout' %}">Sign out</a>
-                  </div>
-                </li>
-              </ul>
-
-                    <div class="dropdown">
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                {% if user.notifications.unread %}
-                                <a href="{% url 'notifications:mark_all_as_read' %}?next={{ request.path }}">Mark all as Read.</a>
-                                <hr>
-                                {% endif %}
-                                {% for notification in user.notifications.unread|slice:"0:5" %}
-                                    <div>
-                                    <a href="{% url 'messaging:direct-chat' notification.actor.pk %}">Message from: {{ notification.actor }}</a> 
-                                  <button class="dropdown-item" type="button">{{ notification.description }}</button>
-                                  <a href="{% url 'notifications:mark_as_read' notification.slug %}?next={{ request.path }}">Mark As Read.</a>		
-                                  </div>
-                                  <div class="dropdown-divider"></div>
-                                {% endfor %}
-                            </div>
-                          </div>
-                          <div class="dropdown-divider"></div>
-                    </div>
-                  </div>
-
-              <form id="search-bar" class="form-inline" action="{% url 'pages:search' %}" method="get">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search for Friends" name="user_name">
-                <button class="btn btn-info" type="submit">Search</button>
-            </form>
-        
-            </div>
-        
-            {% else %}
-        
-            <div class="collapse navbar-collapse h3" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'pages:home' %}">Home</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:login' %}">Sign in</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:signup' %}" >Sign up</a>
-                  </li>
-
-                    </div>
-                  </li>
+                <ul class="flex items-center space-x-4">
+                    <li><a href="{% url 'pages:home' %}" class="hover:text-teal-500">Home/Dashboard <i class="fas fa-house-user"></i></a></li>
+                    <li><a href="{% url 'friend:friends' %}" class="hover:text-teal-500">Friends <i class="fas fa-user-group"></i></a></li>
+                    <li><a href="{% url 'messaging:messenger' %}" class="hover:text-teal-500">Chat Rooms <i class="fas fa-message"></i></a></li>
+                    <li class="group relative" id="dropdown-menu">
+                        <a href="#" class="hover:text-teal-500">Menu <i class="fas fa-chevron-down"></i></a>
+                        <div class="absolute hidden bg-white p-2 shadow mt-2 w-24">
+                            <a href="{% url 'pages:my_profile' user.pk %}" class="block hover:text-teal-500">Profile</a>
+                            <hr class="my-2">
+                            <a href="{% url 'users:logout' %}" class="block hover:text-teal-500">Sign out</a>
+                        </div>
+                    </li>
                 </ul>
-              </div>
-        
-              {% endif %}
-        
-          </nav>
-    
-    </header>
 
-                    
-        <div>
-            {% block page_header %}{% endblock page_header %}
+                <form id="search-bar" class="ml-4" action="{% url 'pages:search' %}" method="get">
+                    <input class="border border-gray-300 p-1" type="search" placeholder="Search for Friends" name="user_name">
+                    <button class="bg-teal-500 text-white p-1" type="submit">Search</button>
+                </form>
+            {% else %}
+                <ul class="flex items-center space-x-4">
+                    <li><a href="{% url 'pages:home' %}" class="hover:text-teal-500">Home</a></li>
+                    <li><a href="{% url 'users:login' %}" class="hover:text-teal-500">Sign in</a></li>
+                    <li><a href="{% url 'users:signup' %}" class="hover:text-teal-500">Sign up</a></li>
+                </ul>
+            {% endif %}
         </div>
-        <div>
-            {% block content %}{% endblock content %}
-        </div>
-        
+    </nav>
+</header>
+
+<div>
+    {% block page_header %}{% endblock page_header %}
+</div>
+<div class="container mx-auto mt-4">
+    {% block content %}{% endblock content %}
+</div>
+
+<script>
+    // JavaScript code to handle dropdown menu toggle
+    document.getElementById('dropdown-menu').addEventListener('click', function() {
+        var dropdown = document.querySelector('.absolute');
+        dropdown.classList.toggle('hidden');
+    });
+</script>
+
 </body>
 
 <style>
-    body {
-      background-color:#F1E6E4 ;
-    }
-
-    .notification {
-      color: white;
-      text-decoration: none;
-      padding: 15px 26px;
-      position: relative;
-      display: inline-block;
-      border-radius: 2px;
-    }
-     
-    .notification .badge {
-      position: absolute;
-      top: 2px;
-      right: 30px;
-      padding: 5px 10px;
-      border-radius: 50%;
-      background-color: red;
-      color: white;
-    }
-
     @font-face {
       font-family: "great-vibes";
       src: local('great-vibes');
       src: url('{% static "fonts/GreatVibes-Regular.ttf" %}');
     }
-
-    </style>
+</style>
 </html>

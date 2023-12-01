@@ -96,9 +96,9 @@ function appendFile(uploader, file) {
     uploaderElement.className = 'file-uploader';
     uploaderElement.textContent = `${uploader}: `;
 
-    const linkElement = document.createElement('a');
-    linkElement.href = `/media/private_chat_images/${file.filename}`;  // Update the path based on your media settings
-    linkElement.textContent = `File: ${file.filename}`;
+    const linkElement = document.createElementNS('image');
+    linkElement.src = `/media/private_chat_images/${file.filename}`;  // Update the path based on your media settings
+    linkElement.alt = `File: ${file.filename}`;
     linkElement.target = '_blank';
 
     const timestampElement = document.createElement('span');
@@ -163,8 +163,6 @@ function connect() {
                 // Append the file information to the chat log
                 appendFile(uploader, file);
                 break;
-
-            break;
             default:
                 console.error("Unknown message type!");
                 break;

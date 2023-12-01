@@ -6,6 +6,8 @@ from .models import ChatRoom, Message, PrivateMessage, PrivateChatRoom
 
 from users.models import CustomUser
 
+from channels.exceptions import StopConsumer
+
 import base64, binascii
 from django.core.files.base import ContentFile
 
@@ -85,9 +87,9 @@ class ChatConsumer(WebsocketConsumer):
                 },
             )
             self.room.online.remove(self.user)
+            raise StopConsumer()
 
         # When the socket disconnects.
-        print("Disconnected")
 
     # Data is parsed to json and message is extracted
     # Message is forwarded using group send to chat message.
@@ -145,10 +147,7 @@ class ChatConsumer(WebsocketConsumer):
 
     def save_message(self, message, is_media):
         saved_message = Message.objects.create(
-            user=self.user, 
-            room=self.room, 
-            content=message,
-            is_media=is_media
+            user=self.user, room=self.room, content=message, is_media=is_media
         )
 
         saved_message.save()
@@ -254,7 +253,8 @@ class DirectChatConsumer(WebsocketConsumer):
             self.room.online.remove(self.user)
 
         # When the socket disconnects.
-        print("Disconnected")
+        print("websocket disconnected...", close_code)
+        raise StopConsumer()
 
     # Json format data is parsed and message is extracted
     # Message is forwarded using group send to chat message.

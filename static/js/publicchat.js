@@ -43,6 +43,7 @@ chatMessageInput.onkeyup = function(e) {
 };
 console.log("Event listener attached to chatMessageSend")
 // Clears the input and forwards the message.
+windows.onload=function(){
 chatMessageSend.onclick = function() {
     if (chatMessageInput.value.length === 0 && !fileInput.files.length) {
         console.log("No file or message to send");
@@ -81,6 +82,7 @@ reader.readAsDataURL(file);
     chatMessageInput.value = "";
     fileInput.value = "";
 };
+}
 // WebSockets.
 
 ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";

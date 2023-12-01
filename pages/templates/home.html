@@ -1,75 +1,65 @@
 {% extends "base.html" %}
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% load static %}
 
 
 {% block content %}
 
     {% if user.is_authenticated %}
 
-         <div class="jumbotron mx-auto mt-5" style="max-height: fit-content; min-width: 400px; max-width: 500px">
-            <h1 class="display-4">Welcome to ChatApp!</h1>
-            <h2>ChatApp is a Real-time communication application.</h2>
-            <hr>
-            <p class="lead mb-2">ChatApp is a Web-application with video chat and real-time messaging capabilities.</p>
-            <p class="lead mb-2">ChatApp's Messaging utilizes Django Channels and Web Sockets in order to provide RTC.</p>
-            <p class="lead mb-2">The friends interface allows users to interact with one-another in various ways.</p>
-            <p class="lead">The notifications in this web-app utilize Django notifications hq.</p>
+         <div class="container mx-auto mt-5 max-w-screen-sm bg-slate-200 space-y-3 rounded-xl">
+            <div class="m-10 py-10">
+            <h1 class="text-4xl font-bold mb-2">Welcome to ChatApp!</h1>
+            <h2 class="text-xl">ChatApp is a Real-time communication application.</h2>
             <hr class="my-4">
-            <h1 class="lead">Friend System</h1>
-            <hr>
-            <h1>User May:</h1>
+            <p class="text-lg mb-2">ChatApp is a Web-application with video chat and real-time messaging capabilities.</p>
+            <p class="text-lg mb-2">ChatApp's Messaging utilizes Django Channels and Web Sockets in order to provide RTC.</p>
+            <p class="text-lg mb-2">The friends interface allows users to interact with one-another in various ways.</p>
+            <p class="text-lg mb-2">The notifications in this web-app utilize Django notifications hq.</p>
+            <hr class="my-4">
+            <h1 class="text-2xl font-bold">Friend System</h1>
+            <hr class="my-4">
+            <h1 class="text-xl">User May:</h1>
             <ul class="ml-4">
                 <li>Add or Remove potential friends.</li>
                 <li>Cancel their pending friend requests.</li>
                 <li>They may also decline incoming friend requests.</li>
             </ul>
-            <hr>
-            <h1>User May:</h1>
-            <hr>
-            <h1 class="lead">Real-time Messaging</h1>
-            <hr>
-            <h1>User May:</h1>
+            <hr class="my-4">
+            <h1 class="text-2xl font-bold">Real-time Messaging</h1>
+            <hr class="my-4">
+            <h1 class="text-xl">User May:</h1>
             <ul class="ml-4">
                 <li>Initiate 1 to 1 Direct Messaging with their friends.</li>
                 <li>Create / join Public Real-time chat rooms.</li>
             </ul>
+            </div>
         </div>
     {% else %}
-         <div class="jumbotron mx-auto mt-5" style="max-height: fit-content; min-width: 400px; max-width: 500px">
-            <h1 class="display-4 mb-3">Welcome to ChatApp!</h1>
-            <h2 class="lead">ChatApp is a Real-time communication application.</h2>
-            <hr>
-            <p class="lead">The integrated friend system allows user to connect with their peers through real-time text chat communication.</p>
+         <div class="container mx-auto mt-5 max-w-screen-sm  rounded-2xl bg-slate-200 space-y-4">
+            <div class="m-10 py-10">
+            <h1 class="text-4xl font-bold mb-3">Welcome to ChatApp!</h1>
+            <h2 class="text-xl">ChatApp is a Real-time communication application.</h2>
             <hr class="my-4">
-            <p class="mb-3" style="text-align: center;">Sign up to start now or login!</p>
-            <div class="row justify-content-center" style="text-align: center;">
-                <div class="col-xs-4 mr-4">
-                    <p class="lead">
-                        <a class="btn btn-primary btn-lg" href="{% url 'users:signup' %}" role="button">Sign up</a>
-                    </p>
-                </div>
-                <div class="col-xs-4 ml-4">   
-                    <p class="lead">
-                        <a class="btn btn-primary btn-lg" href="{% url 'users:login' %}" role="button">Sign in</a>
-                    </p>
-                </div>    
-                <div class="col-xs-4 ml-4">   
-                    <hr class="my-4">
-                    <p class="lead">
-                        Guided By:<br>
-                        Dr. PRADEEP KANCHAN <br>Assistant Professor Gd-III
-                    </p>
-                    <hr class="my-4">
-                    <p class="lead">
-                        Developed By:<br>
-                        Arshad Sheikh <br>
-                        Aprameya P Bhat<br>
-                    </p>
-                </div>    
-                 
+            <p class="text-lg">The integrated friend system allows users to connect with their peers through real-time text chat communication.</p>
+            <hr class="my-4">
+            <p class="text-lg mb-3 text-center">Sign up to start now or login!</p>
+            <div class="flex justify-center space-x-4">
+                <a class="bg-blue-500 text-white px-4 py-2 rounded-full text-lg" href="{% url 'users:signup' %}" role="button">Sign up</a>
+                <a class="bg-blue-500 text-white px-4 py-2 rounded-full text-lg" href="{% url 'users:login' %}" role="button">Sign in</a>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="text-lg">
+                    Guided By:<br>
+                    Dr. PRADEEP KANCHAN <br>Assistant Professor Gd-III<br> NMAM Institute Of Technology, Nitte<br> Karkala-574110
+                </p>
+                <hr class="my-4">
+                <p class="text-lg">
+                    Developed By:<br>
+                    Arshad Sheikh <br>
+                    Aprameya P Bhat<br>
+                </p>
+            </div>
             </div>
         </div>
     {% endif %}
-{% endblock content %}
+{% endblock content %} 

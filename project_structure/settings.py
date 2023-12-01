@@ -33,19 +33,19 @@ CSRF_TRUSTED_ORIGINS = [
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 # Application definition
-
+TAILWIND_APP_NAME = "theme"
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 INSTALLED_APPS = [
     # My apps.
     "users",
     "friend",
     "pages",
-    "daphne",
-    # 'videochat',
+    "theme",
     "messaging",
     # 3rd party apps.
-    "crispy_bootstrap5",
-    "crispy_forms",
-    "bootstrap4",
+    "daphne",
+    "tailwind",
+    # "django_browser_reload",
     "channels",
     # Base apps.
     "django.contrib.admin",
@@ -66,6 +66,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = "project_structure.urls"
@@ -167,7 +168,6 @@ LOGIN_URL = "../users/templates/registration/login.html"
 
 # Added to tell Django to use new custom user model insted of built-in User model.
 AUTH_USER_MODEL = "users.CustomUser"
-
 
 
 # SMTP Configuration

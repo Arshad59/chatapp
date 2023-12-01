@@ -1,19 +1,50 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 {% block content %}
 
-<div class="card text-white bg-dark mx-auto mt-4" style="width: 28rem;">
-    <div class="card-body">
-        <h5 class="card-title" style="text-align: center;">Sign Up</h5>
-        <hr>
-        <form method="post">
-            {% csrf_token %}
-            {{ form|crispy }}
-            <div style="display: block; text-align: center;">
-            <button class="btn btn-success" type="submit">Sign Up</button>
+
+<div class="mx-auto w-auto mt-20">
+    <div class="rounded-xl bg-gray-200 text-white login mx-auto mt-4">
+        <div class="text-black">
+            <h2 class="text-4xl font-bold text-center">Sign Up</h5>
+            <hr class="border-gray-400 mx-auto my-4 w-96 ">
+            <div class="flex justify-center items-center w-full">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-8">
+                    <label class="mb-2  ml-10">UserName: </label>
+                    {{form.username}}
+                </div>
+                <div class="mb-8">
+                    <label class="mb-2  ml-10">Email: </label>
+                    {{form.email}}
+                </div>
+                <div class="mb-8">
+                    <label class="mb-2  ml-10">Age: </label>
+                    {{form.age}}
+                </div>
+
+                <div class="mb-8">
+                    <label class="mb-2  ml-10">Password: </label>
+                    {{form.password1}}
+                </div>
+                <div class="mb-8">
+                    <label class="mb-2  ml-10">Confirm Password: </label>
+                    {{form.password2}}
+                </div>
+
+                <button class="py-4 px-8 mx-32 text-lg bg-violet-400 hover:bg-violet-500 rounded-xl text-white" type="submit">Sign Up</button>
+            </form>
             </div>
-        </form>
+            <hr class="border-gray-400 mx-auto my-4 w-96 ">
+            <div class="flex justify-center items-center">
+            <p class="text-xl">
+                Have an account? <a href="{% url 'users:login' %}" class="font-semibold font-mono">Login</a>
+            </p>
+            
+        </div>
+        </div>
     </div>
 </div>
+
 
 {% endblock content %}

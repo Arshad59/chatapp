@@ -1,50 +1,87 @@
 {% extends "base.html" %}
-{% load crispy_forms_filters %}
 
 {% block content %}
 
-<div class="container" style="max-width: auto; max-height: auto;">
-  <div class="card border-info mt-3 mb-3" style="max-width: auto; max-height: auto;">
-    <img id="profile-pic"class="card-img rounded-circle img-fluid mx-auto mt-2" style="max-height: 200px; max-width: 200px;" src="{{ user.profile.image.url }}">
-    <div id="profile-text"class="card-body">
-      <h1>Username:</h1>
-      <h5 class="card-title">{{ user.username }}</h5>
-      <h1>E-mail:</h1>
-      <p class="card-text mb-2">{{ user.email }}</p>
-      <h1>Bio:</h1>
-      <p class="card-text">{{ user.profile.bio }}</p>
+<div class="container mt-24 mx-auto">
+  <div class="bg-white border border-info rounded-md p-4 mt-3 mb-3 mx-auto max-w-sm">
+    <img id="profile-pic" class="rounded-full mx-auto mt-2 h-48 w-48" src="{{ user.profile.image.url }}" alt="Profile Image">
+    <div id="profile-text" class="text-center">
+      <h1 class="text-xl font-bold">Username:</h1>
+      <h5 class="text-xl my-2">{{ user.username }}</h5>
+      <h1 class="text-xl font-bold">E-mail:</h1>
+      <p class="text-xl my-2">{{ user.email }}</p>
+      <h1 class="text-xl font-bold">Bio:</h1>
+      <p class="text-xl my-2">{{ user.profile.bio }}</p>
+        <div class="mt-4">
+  <button id="editProfileBtn" class="bg-violet-400 hover:bg-violet-700 mx-auto text-white py-2 px-4 rounded">Edit Profile</button>
+    <a href="{% url 'users:delete-owner' %}">
+    <button type="button" class="bg-red-400 hover:bg-red-700 text-white py-2 px-4 rounded">
+      Delete Account
+    </button>
+  </a>
+</div>
     </div>
   </div>
-  </div>
 
-  <div class="card text-white bg-dark mx-auto mt-4" style="width: 32rem;">
-    <div class="card-body">
-        <h5 class="card-title" style="text-align: center;">Edit Profile</h5>
-        <hr>
-    <form id="profile-form"method="post" enctype="multipart/form-data">
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-      {% csrf_token %}
-      <fieldset class="form-group">
-        {{ u_form|crispy }}
-        {{ p_form|crispy }}
-      </fieldset>
-      <div class="form-group" style="display: block; text-align: center;">
-          <button class="btn btn-info" type="submit">Update</button>
-      </div>
-    </form>
-  </div>
 </div>
 
-  <div>
-    <a href="{% url 'users:delete-owner' %}">
-      <button type="button" class="btn btn-danger btn-sm btn-block mb-2 mt-4">
-      Delete Account
-      </button>
-    </a>
+
+<div id="overlay" class="hidden fixed inset-0 bg-black opacity-50 z-50 backdrop-filter backdrop-blur-sm"></div>
+
+<div id="editProfileCard" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white mx-auto max-w-md rounded-md p-4 text-white z-50">
+  
+  <button id="closeBtn" class="absolute top-2 right-2 text-gray-300 hover:text-black focus:outline-none">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+  <h5 class="text-center text-xl font-bold">Edit Profile</h5>
+  <hr class="border-light">
+  <form id="profile-form" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="id_username" class="block text-lg font-medium text-gray-700">Username:</label>
+    <input type="text" name="username" value="{{ user.username }}" id="id_username" class="text-black mt-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-teal-500" autofocus required>
   </div>
+  <div class="mb-3">
+    <label for="id_email" class="block text-lg font-medium text-gray-700">Email:</label>
+    <input type="email" name="email" id="id_email" value="{{ user.email }}" placeholder="Enter your email" class="text-black mt-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-teal-500" required >
+  </div>
+  <div class="mb-3">
+    <label for="id_bio" class="block text-lg font-medium text-gray-700">Bio:</label>
+    <textarea name="bio" id="id_bio" placeholder="Enter your bio" class="text-black mt-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-teal-500">{{ user.profile.bio }}</textarea>
+  </div>
+  <div class="mb-3">
+    <label for="id_image" class="block text-lg font-medium text-gray-700">Profile Image:</label>
+    <input type="file" name="image" id="id_image" value ="{{user.profile.image}}"class="text-black mt-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-teal-500">
+  </div>
+  <div class="form-group text-center">
+    <button class="bg-teal-500 text-white py-2 px-4 rounded" type="submit">Update</button>
+  </div>
+</form>
+
+</div>
+<div class="mt-4">
+
+</div>
+
+
+<script>
+  // JavaScript to toggle visibility of the overlay and edit profile card
+  const editProfileBtn = document.getElementById('editProfileBtn');
+  const overlay = document.getElementById('overlay');
+  const editProfileCard = document.getElementById('editProfileCard');
+  const closeBtn = document.getElementById('closeBtn');
+
+  editProfileBtn.addEventListener('click', function() {
+    overlay.classList.toggle('hidden');
+    editProfileCard.classList.toggle('hidden');
+  });
+
+  closeBtn.addEventListener('click', function() {
+    overlay.classList.add('hidden');
+    editProfileCard.classList.add('hidden');
+  });
+</script>
 
 {% endblock content %}

@@ -27,9 +27,8 @@ urlpatterns = [
     path("", include("users.urls")),
     path("", include("pages.urls")),
     path("", include("friend.urls")),
-    # path('', include('videochat.urls')),
+    path("__reload__/", include("django_browser_reload.urls")),
     path("", include("messaging.urls")),
-    # re_path('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

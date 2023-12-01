@@ -3,81 +3,76 @@
 
 {% block content %}
 
-<head>
-    <style>
-    #chatLog {
-       height: 500px;
-        border-color:white;
-    }
-
-    #onlineUsersSelector {
-      height: 300px;
-    }
-     img{
-            width:50px;
-            height:50px;
-        }
-    </style>
-</head>
-
-<main>
-    
-    <div class="container mt-3 p-5">
-        <div class="row">
-            <div class="col-12 col-md-8">
-                <div class="mb-2">
-                    <div class="form-control" id="chatLog">
-                    {% for message in messages %} 
-                        {%if message.user.username == request.user.username%}
-                        <div style="margin-top: 5px; margin-left:400px">
-                            {% if message.is_media %}
-                            <div style="margin-top: 5px">
-                                {{ message.timestamp }}<br />
-                                <a href="{{message.image.url}}" target = "_blank">
-                                <img src="{{ message.image.url }}" alt="Uploaded Image">
-                                </a>
-                            </div>
-                        {% else %}
-                            {{ message.timestamp }}<br />
-                            <strong>{{ message.content }}</strong><br/>
-                        {%endif%}
-                    </div>
-                    {%else%}
-                    {% if message.is_media %}
-                        <div style="margin-top: 5px">
-                        {{ message.timestamp }}<br />
-                <a href="{{message.image.url}}" target = "_blank">
-                          <img src="{{ message.image.url }}" alt="Uploaded Image">
-                        </a>
-            </div>
-        {% else %}
-            <div style="margin-top: 5px ">
-              {{ message.timestamp }}<br />
-              <strong>{{ message.content }}</strong><br />
-            </div>
-            {%endif%}
-            {%endif%} 
-            {% endfor %}
-        </div>
-    </div>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="chatMessageInput" placeholder="Enter your chat message">
-                    <input type="file" id="fileInput" accept = ".pdf,.png,.jpg,.jpeg"/>
-
-                    <div class="input-group-append">
-                        <button class="btn btn-success" id="chatMessageSend" type="button">Send</button>
-                    </div>
+<main class="mt-3 p-5">
+    <div class="container mx-auto">
+        <div class="flex flex-wrap ">
+            <div class="w-full md:w-8/12 mb-2 ">
+                <div class="border bg-white border-white p-2 h-96 overflow-auto" id="chatLog">
+                    {% for message in messages %}
+                        <div class="mb-2">
+                            {% if message.user.username == request.user.username %}
+                                <div class="ml-[600px]">
+                                    {% if message.is_media %}
+                                        <div class="mt-2">
+                                            {{ message.timestamp }}<br />
+                                            <a href="{{message.image.url}}" target="_blank">
+                                                <img src="{{ message.image.url }}" alt="Uploaded Image" class="w-12 h-12">
+                                            </a>
+                                        </div>
+                                    {% else %}
+                                    
+                                        {{ message.timestamp }}<br />
+                                        <strong>{{ message.content }}</strong><br/>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                {% if message.is_media %}
+                                    <div class="mt-2">
+                                        
+                                        <strong>
+                                            <img src="{{message.user.profile.image.url}}" alt="profile_pic" width="15" height="15">
+                                        {{message.user.username}}<br>
+                                        </strong>
+                                        {{ message.timestamp }}<br />
+                                        <a href="{{message.image.url}}" target="_blank">
+                                            <img src="{{ message.image.url }}" alt="Uploaded Image" class="w-12 h-12">
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="mt-2">
+                                        
+                                         <strong>
+                                            <img src="{{message.user.profile.image.url}}" alt="profile_pic" width="15" height="15">
+                                        {{message.user.username}}<br>
+                                        </strong>
+                                        {{ message.timestamp }}<br />
+                                        <strong>{{ message.content }}</strong><br />
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
                 </div>
+                <div class="flex items-center mt-2">
+                    <input type="text" class="flex-grow border border-gray-300 p-2" id="chatMessageInput" placeholder="Enter your chat message">
+                    <input type="file" id="fileInput" accept=".pdf, .png, .jpg, .jpeg" class="hidden">
+                    <label for="fileInput">
+                    <img src="{%static 'images/send_file.png'%}" alt="upload icon" width="60" height="60" />
+                    <input type="file" id="fileInput" accept = ".pdf,.png,.jpg,.jpeg" name="doc" hidden/>
+                    </label>
+                    <div class="input-group-append">
+                         <button type="button" id="chatMessageSend" class="bg-green-500 text-white py-2 px-4 rounded">Send</button>
+                    </div>
+        </div>
             </div>
-            <div class="col-12 col-md-4">
-                <label for="onlineUsers">Online users</label>
-                <select multiple class="form-control" id="onlineUsersSelector">
+            <div class="w-full md:w-4/12 mt-4 md:mt-0">
+                <label for="onlineUsers" class="block text-lg font-bold mb-2">Online users</label>
+                <select multiple class="border border-gray-300 p-2 w-full h-60" id="onlineUsersSelector">
                 </select>
             </div>
+            {{ room.name|json_script:"roomName" }}
         </div>
-        {{ room.name|json_script:"roomName" }}
     </div>
-
 </main>
 
 <script src="{% static 'js/publicchat.js' %}"></script>
