@@ -2,16 +2,18 @@
 
 {% block content %}
 
-<div class="container mx-auto max-w-xl">
-  <div class="bg-white border-info mt-3">
-    <img id="profile-pic" class="rounded-full mx-auto mt-2 h-48 w-48" src="{{ user.profile.image.url }}" alt="Profile Image">
-    <div id="profile-text" class="p-4">
+<div class="mx-auto max-w-xl">
+  <div class="bg-white border border-gray-200 rounded-2xl mt-20">
+    <div class="mt-12">
+    <img id="profile-pic" class="rounded-full mx-auto h-48 w-48" src="{{ user.profile.image.url }}" alt="Profile Image">
+    <div id="profile-text" class="p-4 text-center space-y-3">
       <h1 class="text-xl font-bold">Username:</h1>
-      <h5 class="text-base">{{ user.username }}</h5>
+      <h5 class="text-xl">{{ user.username }}</h5>
       <h1 class="text-xl font-bold">E-mail:</h1>
-      <p class="text-base mb-2">{{ user.email }}</p>
+      <p class="text-xl mb-2">{{ user.email }}</p>
       <h1 class="text-xl font-bold">Bio:</h1>
-      <p class="text-base">{{ user.profile.bio }}</p>
+      <p class="text-xl">{{ user.profile.bio }}</p>
+    </div>
     </div>
 
     {% if user not in current_user.friends.all and user != current_user %}
@@ -37,8 +39,8 @@
     {% if user in current_user.friends.all and user != current_user %}
     <div class="mb-2">
       <a href="{% url 'messaging:direct-chat' user.pk %}">
-        <button type="button" class="bg-violet-300 text-black py-2 px-4 rounded-full w-fit ml-52 mb-16">
-          Message other user!
+        <button type="button" class="bg-violet-300 text-black py-2 px-4 rounded-full w-fit ml-56 mb-16">
+          Message user!
         </button>
       </a>
     </div>
@@ -47,30 +49,6 @@
   </div>
 
   {{ user.pk|json_script:"videochat.pk" }}
-
-  <script type="text/javascript">
-
-    let videochat_pk = JSON.parse(document.getElementById('videochat.pk').textContent);
-
-    let handleSubmit = async (e) => {
-        e.preventDefault()
-        let room = videochat_pk
-
-        let response = await fetch(`/get_token/?channel=${room}`)
-        let data = await response.json()
-        
-        let UID = data.uid
-        let token = data.token
-
-        sessionStorage.setItem('UID', UID)
-        sessionStorage.setItem('token', token)
-        sessionStorage.setItem('room', room)
-
-        window.open('/privatevideochat/'+videochat_pk+'/', '_self')
-    }
-
-    document.getElementById("videochat").addEventListener('click', handleSubmit)
-  </script>
 
 </div>
 

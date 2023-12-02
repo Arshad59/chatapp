@@ -47,17 +47,6 @@ class SearchView(ListView):
         
         query = self.request.GET.get('user_name')
         object_list = CustomUser.objects.filter(username__icontains=query)
-
+        print(object_list)
         return object_list
 
-# @receiver(post_save, sender=PrivateMessage)
-# def message_to_noti(sender, instance, created, **kwargs):
-
-#     if created:
-#         current_user = CustomUser.objects.get(pk=instance.private_receiver.pk)
-#         msg_sender = instance.private_sender.username
-
-#         content = instance.content
-
-#         # Actor for notification is the sender.
-#         # notify.send(instance.private_sender, verb='Message Created', msg_sender=msg_sender, recipient=current_user, description=content, action_object=instance)
