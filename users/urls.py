@@ -2,7 +2,6 @@ from django.urls import path, include
 from .views import *
 from .forms import Login
 from django.contrib.auth import views as authorization
-from django.urls import reverse_lazy
 
 from . import views
 

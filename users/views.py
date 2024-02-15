@@ -8,18 +8,13 @@ from django.contrib.auth.views import PasswordChangeView
 
 from .models import CustomUser
 from django.contrib.auth.models import User
-# from notifications.models import Notification
-
-
-
-# Create your views here.
 
 def signup(request):
     if request.method=="POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')
+            return redirect('users:login')
         
     form = CustomUserCreationForm()
     return render(request,"signup.html",{
@@ -33,10 +28,8 @@ class CustomPasswordChangeView(PasswordChangeView):
 def delete_owner(request):
 
     owner = CustomUser.objects.get(pk=request.user.pk)
-    # notifications = Notification.objects.filter(actor_object_id=request.user.pk)
 
     if owner:
         owner.delete()
-        # notifications.delete()
 
     return redirect('pages:home')
